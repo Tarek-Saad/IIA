@@ -35,12 +35,14 @@ class GetLOService:
 
         return los
 
+
+
 # إنشاء كائن من GetLOService
-lo_service = GetLOService()
-
-# استدعاء الوظيفة مع اسم المفهوم
-concept_name = "Algorithms"  # يمكنك تغيير هذا إلى أي اسم مفهوم تريد اختباره
-los = lo_service.get_los_related_to_concept(concept_name)
-
-# طباعة النتيجة للتأكد من أنها تعمل بشكل صحيح
-print("Learning Objects related to the concept:", los)
+# lo_service = GetLOService()
+#
+# # استدعاء الوظيفة مع اسم المفهوم
+# concept_name = "Algorithms"  # يمكنك تغيير هذا إلى أي اسم مفهوم تريد اختباره
+# los = lo_service.get_los_related_to_concept(concept_name)
+#
+# # طباعة النتيجة للتأكد من أنها تعمل بشكل صحيح
+# print("Learning Objects related to the concept:", los)
