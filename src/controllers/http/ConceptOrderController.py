@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from src.core.services.GraphService import GraphService
+from src.core.services.ConceptOrderService import GraphService
 
 graph_controller = Blueprint('graph_controller', __name__)
 

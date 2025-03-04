@@ -1,6 +1,6 @@
 import pytest
 from unittest.mock import MagicMock
-from src.core.services.GraphService import GraphService
+from src.core.services.ConceptOrderService import GraphService
 
 
 # Mocking the GraphDB session

@@ -1,5 +1,5 @@
 from flask import Flask
-from src.controllers.http.GraphController import graph_controller
+from src.controllers.http.ConceptOrderController import graph_controller
 
 app = Flask(__name__)
 app.register_blueprint(graph_controller)
