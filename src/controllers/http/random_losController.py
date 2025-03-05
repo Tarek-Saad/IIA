@@ -3,6 +3,7 @@ from flask import Blueprint, request, jsonify
 from src.algorithms.iia.Population import Population
 from src.core.services.ChooseRandomLOService import ConceptOrderService
 from src.algorithms.iia.Encoding import Encoding
+from src.core.services.ConceptMappingService import ConceptMappingService
 
 concept_controller = Blueprint('concept_controller', __name__)
 
@@ -19,7 +20,9 @@ def random_los_encoding():
     concept_service = ConceptOrderService()
     concept_lo_mapping = concept_service.get_random_lo_for_each_concept(concept_names)
 
-    print(concept_lo_mapping)
+    # Set the concept_lo_mapping to the ConceptMappingService for global use
+    mapping_service = ConceptMappingService()
+    mapping_service.set_concept_lo_mapping(concept_lo_mapping)
 
     # If no random LOs were selected, return an error
     if not concept_lo_mapping:
@@ -27,15 +30,9 @@ def random_los_encoding():
 
     # Instantiate Encoding to generate chromosome
     encoding_service = Encoding()
-
-    # Get the total number of LOs (this can be dynamically calculated or defined based on your dataset)
-    total_los_count = 30  # Each concept has 30 LOs, so chromosome length will be 30 for each concept
-
-    # Encode the selected LOs into a chromosome
     chromosome = encoding_service.encode_los_to_chromosome(concept_lo_mapping)
 
     return jsonify({"encoded_chromosome": chromosome}), 200
-
 
 @concept_controller.route('/generate_initial_population', methods=['POST'])
 def generate_initial_population():
