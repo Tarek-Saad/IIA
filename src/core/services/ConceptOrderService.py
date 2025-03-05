@@ -16,7 +16,7 @@ class GraphService:
 
                 # Find all prerequisites (including indirect ones)
                 result = session.run(f"""
-                MATCH (c:Concept {{name: '{current_concept}'}})<-[:PREREQUISITE]-(p)
+                MATCH (c:Concept {{name: '{current_concept}'}})<-[:PREREQUISITE_FOR]-(p)
                 RETURN p.name AS prerequisite
                 """)
 
@@ -47,8 +47,9 @@ class GraphService:
 
                 if cur_concept not in visited:
                     # Find the prerequisites (children) of the current concept
+
                     result = session.run(f"""
-                    MATCH (c:Concept {{name: '{cur_concept}'}})<-[:PREREQUISITE]-(p)
+                    MATCH (c:Concept {{name: '{cur_concept}'}})<-[:PREREQUISITE_FOR]-(p)
                     RETURN p.name AS prerequisite
                     """)
 
