@@ -21,14 +21,8 @@ class ConceptOrderService:
 
         return concept_lo_mapping
 
-# # إنشاء كائن من ConceptOrderService
-# concept_service = ConceptOrderService()
-#
-# # تمرير قائمة من المفاهيم لاختيار LOs لها
-# concept_names = ["Data Structures", "Graph Theory", "Algorithms", "Searching"]
-#
-# # استدعاء الدالة للحصول على LO عشوائي لكل مفهوم
-# concept_lo_mapping = concept_service.get_random_lo_for_each_concept(concept_names)
-#
-# # طباعة النتيجة
-# print("Concept to LO mapping:", concept_lo_mapping)
+
+#concept_service = ConceptOrderService()
+#concept_names = ["Data Structures", "Graph Theory", "Algorithms", "Searching"]
+#concept_lo_mapping = concept_service.get_random_lo_for_each_concept(concept_names)
+#print("Concept to LO mapping:", concept_lo_mapping)

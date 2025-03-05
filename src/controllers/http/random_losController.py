@@ -19,6 +19,8 @@ def random_los_encoding():
     concept_service = ConceptOrderService()
     concept_lo_mapping = concept_service.get_random_lo_for_each_concept(concept_names)
 
+    print(concept_lo_mapping)
+
     # If no random LOs were selected, return an error
     if not concept_lo_mapping:
         return jsonify({"message": "No Learning Objects found for the given concepts"}), 404
@@ -27,12 +29,13 @@ def random_los_encoding():
     encoding_service = Encoding()
 
     # Get the total number of LOs (this can be dynamically calculated or defined based on your dataset)
-    total_los_count = 40  # Adjust based on the number of LOs per concept
+    total_los_count = 30  # Each concept has 30 LOs, so chromosome length will be 30 for each concept
 
     # Encode the selected LOs into a chromosome
-    chromosome = encoding_service.encode_los_to_chromosome(concept_lo_mapping, total_los_count)
+    chromosome = encoding_service.encode_los_to_chromosome(concept_lo_mapping)
 
     return jsonify({"encoded_chromosome": chromosome}), 200
+
 
 @concept_controller.route('/generate_initial_population', methods=['POST'])
 def generate_initial_population():

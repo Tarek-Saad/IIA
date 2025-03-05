@@ -12,7 +12,7 @@ class GetLOService:
             result = session.run(f"""
                 MATCH (c:Concept)-[:HAS_LO]->(lo:LO)
                 WHERE c.name = '{concept_name}'
-                RETURN lo
+                RETURN lo, ID(lo) AS lo_id
             """)
 
             # Iterate through the result and extract relevant information from each LO node
@@ -28,20 +28,18 @@ class GetLOService:
                     "formatt": lo_node["formatt"],
                     "learning_style_sensitive_intuitive": lo_node["learning_style_sensitive_intuitive"],
                     "sourcee": lo_node["sourcee"],
-                    "learning_style_active_reflective": lo_node["learning_style_active_reflective"]
+                    "learning_style_active_reflective": lo_node["learning_style_active_reflective"],
+                    "lo_id": record["lo_id"]  # Adding the lo_id from the query result
                 }
 
                 los.append(lo_data)  # Add the learning object data to the list
 
         return los
 
+# Example usage
+lo_service = GetLOService()
 
+concept_name = "Data Structures"
+los = lo_service.get_los_related_to_concept(concept_name)
 
-#
-# lo_service = GetLOService()
-#
-#
-# concept_name = "Searching"
-# los = lo_service.get_los_related_to_concept(concept_name)
-#
-# print("Learning Objects related to the concept:", los)
+print("Learning Objects related to the concept:", los)
