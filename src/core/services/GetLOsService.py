@@ -10,7 +10,7 @@ class GetLOService:
 
         with self.graph_db.get_session() as session:
             result = session.run(f"""
-                MATCH (c:Concept)-[:WITH_LO]->(lo:LO)
+                MATCH (c:Concept)-[:HAS_LO]->(lo:LO)
                 WHERE c.name = '{concept_name}'
                 RETURN lo
             """)
@@ -37,12 +37,11 @@ class GetLOService:
 
 
 
-# إنشاء كائن من GetLOService
+#
 # lo_service = GetLOService()
 #
-# # استدعاء الوظيفة مع اسم المفهوم
-# concept_name = "Algorithms"  # يمكنك تغيير هذا إلى أي اسم مفهوم تريد اختباره
+#
+# concept_name = "Searching"
 # los = lo_service.get_los_related_to_concept(concept_name)
 #
-# # طباعة النتيجة للتأكد من أنها تعمل بشكل صحيح
 # print("Learning Objects related to the concept:", los)
