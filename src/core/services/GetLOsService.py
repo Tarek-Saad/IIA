@@ -36,10 +36,40 @@ class GetLOService:
 
         return los
 
+    def get_los_related_to_concepts(self, concepts):
+        """Get all Learning Objects related to the given list of concepts"""
+        concept_lo_mapping = {}
+
+        with self.graph_db.get_session() as session:
+            for concept_name in concepts:
+                # Generate the Cypher query dynamically for each concept
+                query = f"""
+                    MATCH (c:Concept)-[:WITH_LO]->(lo:LearningObject)
+                    WHERE c.name = '{concept_name}'
+                    RETURN c.name AS concept_name, lo
+                """
+
+                result = session.run(query)
+
+                lo_list = []
+                for record in result:
+                    lo = record["lo"]
+                    lo_list.append(lo)
+
+                concept_lo_mapping[concept_name] = lo_list
+
+        return concept_lo_mapping
+
+
 # Example usage
 lo_service = GetLOService()
 
-concept_name = "Data Structures"
-los = lo_service.get_los_related_to_concept(concept_name)
+# concept_name = "Data Structures"
+# los = lo_service.get_los_related_to_concept(concept_name)
+#
+# print("Learning Objects related to the concept:", los[0])
 
-print("Learning Objects related to the concept:", los)
+# traversal_result = ["Data Structures", "Linked Lists", "Trees"]
+# los = lo_service.get_los_related_to_concepts(traversal_result)
+#
+# print(los)
