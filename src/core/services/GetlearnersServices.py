@@ -71,28 +71,28 @@ class LearnerServices:
             mapped_learners = map_learners([learner_data])
             for learner in mapped_learners:
                 # Retrieve all 4 learning styles (LS1 to LS4)
-                LS1 = learner.get('LS1', None)  # learning_style_active_reflective
-                LS2 = learner.get('LS2', None)  # learning_style_visual_verbal
-                LS3 = learner.get('LS3', None)  # learning_style_sensing_intuitive
-                LS4 = learner.get('LS4', None)  # learning_style_sequential_global
+                LS1 = learner.get('learning_style_active_reflective', None)  # learning_style_active_reflective
+                LS2 = learner.get('learning_style_visual_verbal', None)  # learning_style_visual_verbal
+                LS3 = learner.get('learning_style_sensing_intuitive', None)  # learning_style_sensing_intuitive
+                LS4 = learner.get('learning_style_sequential_global', None)  # learning_style_sequential_global
 
                 # Return all 4 learning styles as a dictionary or tuple
                 return {'LS1': LS1, 'LS2': LS2, 'LS3': LS3, 'LS4': LS4}
         return None
 
 # Test the service method
-# if __name__ == "__main__":
-#     LearnerServicesOBJ = LearnerServices()
-#     email_to_search = 'tarek@example.com'
-#
-#     # Get the learning styles (LS1 to LS4) directly
-#     learning_styles = LearnerServicesOBJ.get_learner_learning_styles(email_to_search)
-#
-#     if learning_styles:
-#         print(f"Learning Styles for {email_to_search}:")
-#         print(f"LS1 (Active/Reflective): {learning_styles['LS1']}")
-#         print(f"LS2 (Visual/Verbal): {learning_styles['LS2']}")
-#         print(f"LS3 (Sensing/Intuitive): {learning_styles['LS3']}")
-#         print(f"LS4 (Sequential/Global): {learning_styles['LS4']}")
-#     else:
-#         print(f"Learning Style not found for {email_to_search}")
+if __name__ == "__main__":
+    LearnerServicesOBJ = LearnerServices()
+    email_to_search = 'yasmin@example.com'
+
+    # Get the learning styles (LS1 to LS4) directly
+    learning_styles = LearnerServicesOBJ.get_learner_learning_styles(email_to_search)
+
+    if learning_styles:
+        print(f"Learning Styles for {email_to_search}:")
+        print(f"LS1 (Active/Reflective): {learning_styles['LS1']}")
+        print(f"LS2 (Visual/Verbal): {learning_styles['LS2']}")
+        print(f"LS3 (Sensing/Intuitive): {learning_styles['LS3']}")
+        print(f"LS4 (Sequential/Global): {learning_styles['LS4']}")
+    else:
+        print(f"Learning Style not found for {email_to_search}")

@@ -28,9 +28,12 @@ class GetLOMatching:
             concept_lo_mapping[concept] = lo_list
 
         # Step 3: Generate multiple random bit sequences for each concept
+        conceptsNum = len(traversal_result)
+        pathes = 2
+
         RandomBitSequenceGeneratorOBJ = RandomBitSequenceGenerator()
         random_bit_sequences = RandomBitSequenceGeneratorOBJ.generate_multiple_random_bit_sequences(
-            len(traversal_result), 2)
+            conceptsNum, pathes)
 
         # Step 4: Loop through each path (bit sequence)
         selected_los = []
@@ -38,7 +41,7 @@ class GetLOMatching:
 
         # Loop through each path of random bit sequences (each path corresponds to a different set of selections)
         for path_idx, path in enumerate(random_bit_sequences):
-            print(f"Path {path_idx + 1}: {path}")
+            # print(f"Path {path_idx + 1}: {path}")
 
             # Create a list for the current path to hold the selected LOs
             path_selected_los = []
@@ -60,4 +63,4 @@ class GetLOMatching:
             selected_los.append(path_selected_los)
             chromosomes.append(path_chromosome)
 
-        return {"selected_los": selected_los, "chromosomes": chromosomes}
+        return {"selected_los": selected_los, "chromosomes": chromosomes , "concepts_num":conceptsNum , "pathes_num" : pathes}
