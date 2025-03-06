@@ -74,3 +74,5 @@ class GraphService:
                     stack.pop()
 
         return all_concepts
+
+
