@@ -19,3 +19,26 @@ class Population:
             population.append(chromosome)
 
         return population
+
+    def generate_random_bit_sequence_for_concepts(self, num_concepts):
+        """
+        Generates a bit sequence for each concept. Each concept is represented by 30 bits.
+        In each 30-bit segment, only one bit is set to 1 randomly, and the rest are 0.
+        """
+        bit_sequence = []
+        for _ in range(num_concepts):
+            # Generate a 30-bit segment where only one bit is set to 1
+            segment = [0] * 30
+            random_index = random.randint(0, 29)  # Randomly choose a bit to set as 1
+            segment[random_index] = 1
+            bit_sequence.extend(segment)  # Add this segment to the bit sequence
+        return bit_sequence
+
+
+if __name__ == "__main__":
+    population_service = Population()
+
+    # Test with 4 concepts and generate initial population
+    random_bit_sequence = population_service.generate_random_bit_sequence_for_concepts(4)
+    print("Generated Random Bit Sequence for 4 Concepts:", random_bit_sequence)
+
