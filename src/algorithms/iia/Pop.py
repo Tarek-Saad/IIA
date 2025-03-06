@@ -35,10 +35,10 @@ class RandomBitSequenceGenerator:
         return sequences
 
 
-if __name__ == "__main__":
-    population_service = RandomBitSequenceGenerator()
-
-    # Corrected way to call the method
-    result = population_service.generate_multiple_random_bit_sequences(3,2)
-
-    print(result)  # Print the result to see the generated bit sequence
+# if __name__ == "__main__":
+#     population_service = RandomBitSequenceGenerator()
+#
+#     # Corrected way to call the method
+#     result = population_service.generate_multiple_random_bit_sequences(3,2)
+#
+#     print(result[0])  # Print the result to see the generated bit sequence

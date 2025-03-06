@@ -24,15 +24,15 @@ class getLS:
 if __name__ == "__main__":
     LS_service = getLS()
 
-    learning_goals = ["Trees"]
+    learning_goals = ["Searching"]
     knowledge_base = ["Introduction to Programming"]
     result = LS_service.LOsLS(learning_goals, knowledge_base)
 
-    # print(result[0][0]['LS1'])  # Print the result to see the generated bit sequence
+    print(result[0][0]['LS1'])  # Print the result to see the generated bit sequence
     print(result)  # Print the result to see the generated bit sequence
 
-    # email_to_search = 'yasmin@example.com'
-    # learning_styles = LS_service.LearnerLS(email_to_search)
-    #
-    # print(learning_styles)
+    email_to_search = 'kareem@example.com'
+    learning_styles = LS_service.LearnerLS(email_to_search)
+
+    print(learning_styles)
 
