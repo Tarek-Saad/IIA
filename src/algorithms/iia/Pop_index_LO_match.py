@@ -29,7 +29,7 @@ class GetLOMatching:
 
         # Step 3: Generate multiple random bit sequences for each concept
         conceptsNum = len(traversal_result)
-        pathes = 20
+        pathes = 100
 
         RandomBitSequenceGeneratorOBJ = RandomBitSequenceGenerator()
         random_bit_sequences = RandomBitSequenceGeneratorOBJ.generate_multiple_random_bit_sequences(

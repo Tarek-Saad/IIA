@@ -14,7 +14,7 @@ class getLS:
         all_paths_learning_styles =ExtractFromLOsOBJ.extract_learning_styles_for_paths(result['selected_los'])
 
 
-        return {"LSs":all_paths_learning_styles , "LOs":result['selected_los']}
+        return {"LSs":all_paths_learning_styles , "LOs":result['selected_los'] , "chromosomes":result['chromosomes']}
 
     def LearnerLS(self , email):
         LearnerServicesOBJ = LearnerServices()
