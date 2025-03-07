@@ -1,16 +1,43 @@
 import numpy as np
+from src.algorithms.iia.Pop_index_LO_match import GetLOMatching
+from src.core.services.ExtractFromLOs import ExtractFromLOs
+from src.core.services.GetlearnersServices import LearnerServices
 
 class AffinityCalculation:
-    def __init__(self, learner_profile, learner_logs, population):
+    def __init__(self, learner_email, learning_goals, knowledge_base):
         """
         Initialize Affinity Calculation
-        :param learner_profile: Dictionary containing learning goals, prior knowledge, and learning style
-        :param learner_logs: Dictionary containing past interactions with learning objects (LOs)
-        :param population: List of antibodies (learning paths)
+        :param learner_email: The learner's email address for retrieving learning style
+        :param learning_goals: List of concepts the learner wants to study
+        :param knowledge_base: List of concepts the learner already knows
         """
-        self.learner_profile = learner_profile
-        self.learner_logs = learner_logs  # Real-time learner performance data
-        self.population = population  # Antibody population (learning paths)
+        self.learner_email = learner_email
+        self.learning_goals = learning_goals
+        self.knowledge_base = knowledge_base
+        self.learner_profile = self.get_learner_profile()
+        self.population = self.get_population_from_db()
+        self.ranked_population = []
+
+    def get_learner_profile(self):
+        """
+        Retrieve the learner's learning style from the database.
+        :return: Dictionary containing learning style preferences.
+        """
+        learner_service = LearnerServices()
+        learner_learning_styles = learner_service.get_learner_learning_styles(self.learner_email)
+        return {"learning_style": learner_learning_styles}
+
+    def get_population_from_db(self):
+        """
+        Retrieve learning objects (LOs) and their learning styles from the database.
+        :return: List of learning paths (antibodies) with learning style metadata.
+        """
+        lo_matcher = GetLOMatching()
+        matched_los = lo_matcher.getLOMatch(self.learning_goals, self.knowledge_base)
+
+        lo_extractor = ExtractFromLOs()
+        all_paths_learning_styles = lo_extractor.extract_learning_styles_for_paths(matched_los["selected_los"])
+        return all_paths_learning_styles
 
     def compute_learning_style_fitness(self, learning_path):
         """
@@ -25,8 +52,8 @@ class AffinityCalculation:
         if total_los == 0:
             return 0  # Prevent division by zero
 
-        for concept, lo_data in learning_path.items():
-            lo_style = lo_data["learning_style"]
+        for lo_data in learning_path:
+            lo_style = lo_data  # Directly using LO's learning style dict
             learner_style = self.learner_profile["learning_style"]
 
             # Compute absolute difference for each learning style dimension
@@ -37,89 +64,33 @@ class AffinityCalculation:
         f1 = style_match_score / (total_los * learning_dimensions)
         return f1
 
-    def compute_lo_combination_penalty(self, learning_path):
-        """
-        Compute the second objective function (f2) - LO Combination Penalty.
-        Penalizes LO combinations that have led to poor learning outcomes.
-        Equation 4: f2 = (Σ R_{L_i, L_j} * N(L_i ∩ L_j)) / ((M-1) * N(L))
-        """
-        M = len(learning_path)
-        failed_los = self.learner_logs.get("failed_los", {})
-
-        # Ensure failed_los is a dictionary
-        if not isinstance(failed_los, dict):
-            failed_los = {lo_id: 1 for lo_id in failed_los}
-
-        total_learners = self.learner_logs.get("total_learners", 1)  # Avoid division by zero
-
-        penalty = 0
-        for concept_i, lo_i in learning_path.items():
-            lo_id_i = lo_i["lo_id"]
-
-            for concept_j, lo_j in learning_path.items():
-                lo_id_j = lo_j["lo_id"]
-                if lo_id_i != lo_id_j and lo_id_i in failed_los and lo_id_j in failed_los:
-                    # R_{L_i, L_j} is the correlation strength (assumed as 1 if both failed before)
-                    correlation_strength = 1  
-                    num_failed_together = failed_los.get(lo_id_i, 0) + failed_los.get(lo_id_j, 0)
-                    penalty += correlation_strength * num_failed_together
-
-        f2 = penalty / ((M - 1) * total_learners) if M > 1 else 0
-        return f2
-
     def compute_fitness(self, learning_path):
         """
         Compute the general fitness function (F_v).
-        Equation 2: F_v = Σ (w_i * f_i (U, B))
+        Equation 2: F_v = f1 (Since f2 is removed)
         """
-        w1, w2 = 0.5, 0.5  # Assign equal weights to objectives
         f1 = self.compute_learning_style_fitness(learning_path)
-        f2 = self.compute_lo_combination_penalty(learning_path)
-
-        # Compute final fitness value
-        F_v = (w1 * f1) + (w2 * f2)
-        return F_v
+        return f1  # Since f2 is removed, F_v = f1
 
     def compute_affinity(self, learning_path):
         """
         Compute affinity score (A_v) based on fitness (F_v).
-        Equation 1: A_v = 1 / (1 + F_v)
+        Equation 1: A_v = 1 / F_v
         """
         F_v = self.compute_fitness(learning_path)
-        A_v = 1 / (1 + max(0, F_v))  # Ensure non-negative fitness
-        return A_v
-
-    def compute_antibody_similarity(self, path_v, path_s):
-        """
-        Compute similarity between two antibodies.
-        Equation 5: S_{v,s} = k_{v,s} / L
-        """
-        matching_count = sum(1 for concept in path_v if path_v[concept]["lo_id"] == path_s[concept]["lo_id"])
-        L = len(path_v)  # Number of concepts in the path
-
-        S_vs = matching_count / L if L > 0 else 0
-        return S_vs
-
-    def compute_population_diversity(self):
-        """
-        Compute population diversity (C_v).
-        Equation 6: C_v = (Σ I(S_{v,s} > T)) / N
-        """
-        N = len(self.population)  # Total antibodies
-        T = 0.5  # Threshold for similarity
-
-        diversity_scores = []
-        for v in self.population:
-            similar_count = sum(1 for s in self.population if self.compute_antibody_similarity(v, s) > T)
-            C_v = similar_count / N if N > 0 else 0
-            diversity_scores.append(C_v)
-
-        return np.mean(diversity_scores)  # Return average diversity score
+        if F_v == 0:
+            return float('inf')  # Prevent division by zero; a perfect match should have very high affinity.
+        return 1 / F_v  # Using the correct affinity formula
 
     def rank_learning_paths(self):
         """
-        Rank multiple learning paths based on their affinity score.
+        Compute affinity scores for all learning paths and rank them.
         """
-        ranked_paths = [(path, self.compute_affinity(path)) for path in self.population]
-        ranked_paths.sort(key=lambda x: x[1], reverse=True)  # Higher affinity comes first
-        return ranked_paths
+        self.ranked_population = [(path, self.compute_affinity(path)) for path in self.population]
+        self.ranked_population.sort(key=lambda x: x[1], reverse=True)  # Higher affinity comes first
+
+        print("\n===== Ranked Learning Paths =====")
+        for i, (path, affinity) in enumerate(self.ranked_population):
+            print(f"Path {i+1}: Affinity Score = {affinity:.4f}")
+
+        return self.ranked_population
