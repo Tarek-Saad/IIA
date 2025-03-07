@@ -4,7 +4,6 @@ from src.algorithms.iia.Pop_index_LO_match import GetLOMatching
 
 
 from src.core.services.ChooseRandomLOService import ConceptOrderService
-from src.core.services.ConceptMappingService import ConceptMappingService
 
 concept_controller = Blueprint('concept_controller', __name__)
 
