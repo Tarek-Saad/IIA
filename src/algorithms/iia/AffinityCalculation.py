@@ -1,7 +1,7 @@
 import numpy as np
-from src.algorithms.iia.Pop_index_LO_match import GetLOMatching
-from src.core.services.ExtractFromLOs import ExtractFromLOs
+from src.algorithms.iia.getLS import getLS
 from src.core.services.GetlearnersServices import LearnerServices
+
 
 class AffinityCalculation:
     def __init__(self, learner_email, learning_goals, knowledge_base):
@@ -15,7 +15,7 @@ class AffinityCalculation:
         self.learning_goals = learning_goals
         self.knowledge_base = knowledge_base
         self.learner_profile = self.get_learner_profile()
-        self.population = self.get_population_from_db()
+        self.population_data = self.get_population_from_getLS()
         self.ranked_population = []
 
     def get_learner_profile(self):
@@ -27,17 +27,14 @@ class AffinityCalculation:
         learner_learning_styles = learner_service.get_learner_learning_styles(self.learner_email)
         return {"learning_style": learner_learning_styles}
 
-    def get_population_from_db(self):
+    def get_population_from_getLS(self):
         """
-        Retrieve learning objects (LOs) and their learning styles from the database.
-        :return: List of learning paths (antibodies) with learning style metadata.
+        Retrieve learning objects (LOs) and their learning styles using the getLS function.
+        :return: Dictionary containing both LS and LO data.
         """
-        lo_matcher = GetLOMatching()
-        matched_los = lo_matcher.getLOMatch(self.learning_goals, self.knowledge_base)
-
-        lo_extractor = ExtractFromLOs()
-        all_paths_learning_styles = lo_extractor.extract_learning_styles_for_paths(matched_los["selected_los"])
-        return all_paths_learning_styles
+        LS_service = getLS()
+        result = LS_service.LOsLS(self.learning_goals, self.knowledge_base)
+        return result  # Returns {"LSs": learning styles, "LOs": learning objects}
 
     def compute_learning_style_fitness(self, learning_path):
         """
@@ -80,17 +77,38 @@ class AffinityCalculation:
         F_v = self.compute_fitness(learning_path)
         if F_v == 0:
             return float('inf')  # Prevent division by zero; a perfect match should have very high affinity.
-        return 1 / F_v  # Using the correct affinity formula
+        return 1 / F_v
 
     def rank_learning_paths(self):
         """
         Compute affinity scores for all learning paths and rank them.
+        Display ranked paths with selected LOs and Learning Styles.
         """
-        self.ranked_population = [(path, self.compute_affinity(path)) for path in self.population]
+        LSs = self.population_data["LSs"]
+        LOs = self.population_data["LOs"]
+        self.ranked_population = [(LS, self.compute_affinity(LS), LO) for LS, LO in zip(LSs, LOs)]
         self.ranked_population.sort(key=lambda x: x[1], reverse=True)  # Higher affinity comes first
 
         print("\n===== Ranked Learning Paths =====")
-        for i, (path, affinity) in enumerate(self.ranked_population):
-            print(f"Path {i+1}: Affinity Score = {affinity:.4f}")
+        for i, (ls_data, affinity, lo_data) in enumerate(self.ranked_population):
+            print(f"\nPath {i+1}:")
+            print(f"Affinity Score: {affinity:.4f}")
+
+            for j, (ls, lo) in enumerate(zip(ls_data, lo_data)):
+                print(f"  LO {j+1}: {lo}")  # Displays LO ID and metadata
+                print(f"  LS: {ls}")  # Displays corresponding learning style
 
         return self.ranked_population
+
+
+if __name__ == "__main__":
+    # Sample Test Data
+    learner_email = "kareem@example.com"
+    learning_goals = ["Searching"]
+    knowledge_base = ["Introduction to Programming"]
+
+# Initialize Affinity Calculation and Rank Learning Paths
+    affinity_calculator = AffinityCalculation(learner_email, learning_goals, knowledge_base)
+    affinity_calculator.rank_learning_paths()
+
+

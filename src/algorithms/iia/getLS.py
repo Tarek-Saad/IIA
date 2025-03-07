@@ -14,12 +14,13 @@ class getLS:
         all_paths_learning_styles =ExtractFromLOsOBJ.extract_learning_styles_for_paths(result['selected_los'])
 
 
-        return all_paths_learning_styles
+        return {"LSs":all_paths_learning_styles , "LOs":result['selected_los']}
 
     def LearnerLS(self , email):
         LearnerServicesOBJ = LearnerServices()
         learner_learning_styles = LearnerServicesOBJ.get_learner_learning_styles(email)
         return learner_learning_styles
+
 
 if __name__ == "__main__":
     LS_service = getLS()
@@ -28,7 +29,7 @@ if __name__ == "__main__":
     knowledge_base = ["Introduction to Programming"]
     result = LS_service.LOsLS(learning_goals, knowledge_base)
 
-    print(result[0][0]['LS1'])  # Print the result to see the generated bit sequence
+    # print(result[0][0]['LS1'])  # Print the result to see the generated bit sequence
     print(result)  # Print the result to see the generated bit sequence
 
     email_to_search = 'kareem@example.com'
