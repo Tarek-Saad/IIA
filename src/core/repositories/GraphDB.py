@@ -6,6 +6,9 @@ class GraphDB:
     def __init__(self):
         self.driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USERNAME, NEO4J_PASSWORD))
 
+    def get_driver(self):
+        return self.driver
+
     def get_session(self):
         return self.driver.session()
 

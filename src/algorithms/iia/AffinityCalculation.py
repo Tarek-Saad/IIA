@@ -90,28 +90,34 @@ class AffinityCalculation:
         LOs = self.population_data["LOs"]
         chromosomes = self.population_data["chromosomes"]
 
-        # Combining LS, LOs, and chromosomes into ranked population
+        # Combine LS, LOs, and chromosomes into ranked population
         self.ranked_population = [
             (LS, self.compute_affinity(LS), LO, chromosome)
             for LS, LO, chromosome in zip(LSs, LOs, chromosomes)
         ]
 
-        # Sort by affinity score
-        # self.ranked_population.sort(key=lambda x: x[1], reverse=True)  # Higher affinity comes first
+        # Sort by affinity score (uncomment if you need sorted results)
+        # self.ranked_population.sort(key=lambda x: x[1], reverse=True)
 
-        print("\n===== Ranked Learning Paths =====")
+        print("\n" + "=" * 50)
+        print("📊  Ranked Learning Paths")
+        print("=" * 50)
+
         for i, (ls_data, affinity, lo_data, chromosome) in enumerate(self.ranked_population):
-            print(f"\nPath {i + 1}:")
-            print(f"Affinity Score: {affinity:.4f}")
+            print(f"\n🔸 Path {i + 1}:")
+            print(f"    ➤ Affinity Score: {affinity:.4f}")
+            print(f"    ➤ Chromosome: {chromosome}")
 
+            print("    ➤ Learning Objects & Learning Styles:")
             for j, (ls, lo) in enumerate(zip(ls_data, lo_data)):
-                print(f"  LO {j + 1}: {lo}")  # Displays LO ID and metadata
-                print(f"  LS: {ls}")  # Displays corresponding learning style
+                print(
+                    f"        - LO {j + 1}: {lo['name']} (Difficulty: {lo.get('difficulty', 'N/A')}, ID: {lo.get('lo_id', 'N/A')})")
+                print(f"          LS: {ls}")
 
-            print(f"  Chromosome: {chromosome}")  # Display the chromosome for each path
-
-        print("\n===== self.ranked_population NEWWW =====")
-        print(self.ranked_population[0][2])
+        print("\n" + "=" * 50)
+        print("✅ First LO of First Ranked Path:")
+        print("=" * 50)
+        print(self.ranked_population[0][2])  # Displaying LOs of the first ranked path
 
         return self.ranked_population
 
