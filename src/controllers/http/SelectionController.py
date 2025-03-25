@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from src.algorithms.iia.AffinityCalculation import AffinityCalculation
-from src.algorithms.iia.Selection import Selection
+from src.algorithms.iia.SelectionV2 import Selection
 
 selection_controller = Blueprint('selection_controller', __name__)
 
@@ -23,6 +23,7 @@ def get_best_learning_path():
         ranked_population = affinity_calc.rank_learning_paths()
         affinity_data = affinity_calc.get_affinity_and_concentration()
 
+        # ✅ Correct instantiation
         selection = Selection(ranked_population, affinity_data, alpha)
         selected_path, selected_index = selection.roulette_wheel_selection()
         filtered_result = selection.get_filtered_best_path_from_result(selected_path, selected_index)

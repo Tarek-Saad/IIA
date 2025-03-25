@@ -56,7 +56,7 @@ class Selection:
 
         self.display_best_path_details(best_selected_path, best_selected_path_idx, self.affinity_concentration_data)
 
-        return best_selected_path, best_selected_path_idx  # ✅ return both
+        return best_selected_path, best_selected_path_idx  # ✅ return both!
 
     def display_best_path_details(self, selected_path, path_idx, affinity_concentration_data):
         ls_data, affinity, lo_data, chromosome = selected_path
