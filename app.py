@@ -35,7 +35,7 @@ app.register_blueprint(learning_analysis_controller, url_prefix='/learning-analy
 # Default GET route for the root URL
 @app.route('/')
 def home():
-    return "Welcome to the Learning Object API! Navigate to specific endpoints for further actionss ."
+    return "Welcome to the Learning Object API! Navigate to specific endpoints for further actions ."
 
 
 if __name__ == "__main__":
