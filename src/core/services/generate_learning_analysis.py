@@ -31,6 +31,7 @@ concepts = [
     "Internet of Things (IoT)", "Embedded Systems", "Quantum Computing", "Automata Theory"
 ]
 
+
 def generate_learning_analysis(user_knowledge: str, user_goal: str):
     prompt = f"""
 You are an intelligent assistant helping to build a personalized learning path.
@@ -51,7 +52,7 @@ Your task is to:
 Respond with **only raw JSON** in the following format:
 {{
   "knowledge_base": ["concept1", "concept2"],
-  "learning_goal": "concept_from_list"
+  "learning_goal": ["concept_from_list"]
 }}
 """
     try:
@@ -66,10 +67,20 @@ Respond with **only raw JSON** in the following format:
         )
         ai_text = response.choices[0].message.content
         cleaned_json = ai_text.replace("```json", "").replace("```", "").strip()
-        return json.loads(cleaned_json)
+
+        # Ensure output is in list format as required
+        json_response = json.loads(cleaned_json)
+
+        # Ensure "knowledge_base" and "learning_goal" are both lists
+        if isinstance(json_response.get("knowledge_base"), list) and isinstance(json_response.get("learning_goal"),
+                                                                                list):
+            return json_response
+        else:
+            raise ValueError("The format of the returned data is incorrect.")
 
     except Exception as e:
         return {"error": str(e)}
+
 
 # ✅ Manual test
 if __name__ == "__main__":
