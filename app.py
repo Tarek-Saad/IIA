@@ -12,9 +12,14 @@ app = Flask(__name__)
 app.register_blueprint(graph_controller, url_prefix='/graph', name='graph_blueprint')  # For concept order related routes
 app.register_blueprint(LO_controller, url_prefix='/learning-objects', name='lo_blueprint')  # For learning object related routes
 app.register_blueprint(concept_controller, url_prefix='/random-lo', name='concept_blueprint')  # For random learning object related routes
-app.register_blueprint(selection_controller, url_prefix="/api") #for selection
-app.register_blueprint(lo_child_controller, url_prefix="/fetch") #for geting sub LOs childs
-app.register_blueprint(learning_analysis_controller, url_prefix='/learning-analysis') #to get the inputs of the algorithms (knowldgebase&goal)
+app.register_blueprint(selection_controller, url_prefix="/api")  # For selection
+app.register_blueprint(lo_child_controller, url_prefix="/fetch")  # For getting sub LOs children
+app.register_blueprint(learning_analysis_controller, url_prefix='/learning-analysis')  # To get the inputs of the algorithms (knowledgebase & goal)
+
+# Default GET route for the root URL
+@app.route('/')
+def home():
+    return "Welcome to the Learning Object API! Navigate to specific endpoints for further actions."
 
 if __name__ == "__main__":
     app.run(debug=True)
