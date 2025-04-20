@@ -18,7 +18,11 @@ class LOChildFetcher:
         ORDER BY length(path) DESC
         LIMIT 1
 
-        RETURN nodes(path) AS orderedSubLOs
+        WITH nodes(path) AS orderedSubLOs
+        UNWIND orderedSubLOs AS subLO
+        WITH COLLECT({name: subLO.name, material: subLO.material, reference: subLO.reference}) AS subLODetails
+        
+        RETURN subLODetails AS orderedSubLOs
         """
 
         try:
