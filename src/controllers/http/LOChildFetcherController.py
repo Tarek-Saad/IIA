@@ -18,7 +18,8 @@ def get_sub_los_by_lo_id():
         formatted_sub_los = [
             {
                 "name": sub.get("name", "Unnamed"),
-                "material": sub.get("material", "No material found")
+                "material": sub.get("material", "No material found"),
+                "reference": sub.get("reference", "No reference")
             }
             for sub in sub_los
         ]
