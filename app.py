@@ -9,8 +9,22 @@ from src.controllers.http.generate_learning_analysisController import learning_a
 
 app = Flask(__name__)
 
-# Enable CORS for all routes
-CORS(app, resources={r"/*": {"origins": "*", "allow_headers": ["Content-Type", "Authorization"], "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"]}})
+# Enable CORS for all routes with specific origins
+CORS(app, 
+    resources={r"/*": {
+        "origins": [
+            "http://localhost:3000",
+            "http://192.168.1.195:3000",
+            "https://codengo-4hyo2vs7x-tarek-saads-projects.vercel.app",
+            "https://codengo.vercel.app"
+        ],
+        "allow_headers": ["Content-Type", "Authorization"],
+        "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        "supports_credentials": True,
+        "allow_credentials": True
+    }},
+    supports_credentials=True
+)
 
 # Register all Blueprints with unique names to avoid conflicts
 app.register_blueprint(graph_controller, url_prefix='/graph', name='graph_blueprint')  # For concept order related routes
