@@ -1,7 +1,9 @@
 from flask import Blueprint, request, jsonify
+from flask_cors import CORS
 from src.core.services.generate_learning_analysis import generate_learning_analysis
 
 learning_analysis_controller = Blueprint('learning_analysis_controller', __name__)
+CORS(learning_analysis_controller)
 
 @learning_analysis_controller.route('/analyze', methods=['POST'])
 def analyze_learning():
