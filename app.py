@@ -23,6 +23,7 @@ CORS(app,
         }
     }
 )
+CORS(app, resources={r"/*": {"origins": "*", "allow_headers": ["Content-Type", "Authorization"], "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"]}})
 
 # Register all Blueprints with unique names to avoid conflicts
 app.register_blueprint(graph_controller, url_prefix='/graph', name='graph_blueprint')  # For concept order related routes
