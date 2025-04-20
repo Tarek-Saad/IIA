@@ -10,26 +10,18 @@ from src.controllers.http.generate_learning_analysisController import learning_a
 app = Flask(__name__)
 
 # Enable CORS for all routes
-def cors_origin_allowed(origin):
-    # Allow localhost and development URLs
-    if origin and (origin.startswith('http://localhost:') or 
-                  origin.startswith('http://192.168.') or
-                  origin.startswith('http://10.0.') or
-                  'codengo' in origin or
-                  'vercel.app' in origin):
-        return True
-    return False
-
 CORS(app, 
-    resources={r"/*": {
-        "origins": cors_origin_allowed,  # Use the function to check origins dynamically
-        "allow_headers": ["Content-Type", "Authorization"],
-        "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-        "supports_credentials": True,
-        "allow_credentials": True,
-        "expose_headers": ["Content-Type", "Authorization"]
-    }},
-    supports_credentials=True
+    origins=["http://localhost:3000", "http://192.168.1.195:3000", "https://codengo-4hyo2vs7x-tarek-saads-projects.vercel.app", "*"],
+    allow_credentials=True,
+    supports_credentials=True,
+    resources={
+        r"/*": {
+            "origins": ["http://localhost:3000", "http://192.168.1.195:3000", "https://codengo-4hyo2vs7x-tarek-saads-projects.vercel.app", "*"],
+            "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+            "allow_headers": ["Content-Type", "Authorization"],
+            "expose_headers": ["Content-Type", "Authorization"]
+        }
+    }
 )
 
 # Register all Blueprints with unique names to avoid conflicts
