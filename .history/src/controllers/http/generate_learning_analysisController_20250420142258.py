@@ -3,7 +3,13 @@ from flask_cors import CORS
 from src.core.services.generate_learning_analysis import generate_learning_analysis
 
 learning_analysis_controller = Blueprint('learning_analysis_controller', __name__)
-CORS(learning_analysis_controller, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
+CORS(learning_analysis_controller, resources={
+    r"/*": {
+        "origins": ["http://192.168.1.195:3000", "http://localhost:3000"],
+        "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        "allow_headers": ["Content-Type", "Authorization", "X-Requested-With"]
+    }
+})
 
 @learning_analysis_controller.route('/analyze', methods=['POST'])
 def analyze_learning():
