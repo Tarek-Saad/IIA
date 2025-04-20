@@ -34,17 +34,6 @@ def cors_origin_allowed(origin):
     return False
 
 
-CORS(app, 
-    resources={r"/*": {
-        "origins": cors_origin_allowed,  # Use the function to check origins dynamically
-        "allow_headers": ["Content-Type", "Authorization"],
-        "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-        "supports_credentials": True,
-        "allow_credentials": True,
-        "expose_headers": ["Content-Type", "Authorization"]
-    }},
-    supports_credentials=True
-)
 
 
 # Register all Blueprints with unique names to avoid conflicts
