@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_cors import CORS
 from src.controllers.http.ConceptOrderController import graph_controller
 from src.controllers.http.GetLOsController import LO_controller
 from src.controllers.http.random_losController import concept_controller
@@ -7,6 +8,9 @@ from src.controllers.http.LOChildFetcherController import lo_child_controller
 from src.controllers.http.generate_learning_analysisController import learning_analysis_controller
 
 app = Flask(__name__)
+
+# Enable CORS for all routes
+CORS(app, resources={r"/*": {"origins": "*", "allow_headers": ["Content-Type", "Authorization"], "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"]}})
 
 # Register all Blueprints with unique names to avoid conflicts
 app.register_blueprint(graph_controller, url_prefix='/graph', name='graph_blueprint')  # For concept order related routes
