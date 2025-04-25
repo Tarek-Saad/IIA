@@ -103,7 +103,7 @@ def main():
     learning_goals = ["Searching"]
     knowledge_base = ["Introduction to Programming"]
 
-    threshold = 0.5
+    threshold = 0.01
     alpha = 0.5
 
     affinity_calculator = AffinityCalculation(learner_email, learning_goals, knowledge_base, threshold)

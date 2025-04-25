@@ -16,7 +16,7 @@ def get_best_learning_path():
         if not learner_email or not learning_goals or not knowledge_base:
             return jsonify({"error": "Missing required fields"}), 400
 
-        threshold = 0.5
+        threshold = 0.01
         alpha = 0.5
 
         affinity_calc = AffinityCalculation(learner_email, learning_goals, knowledge_base, threshold)
@@ -27,6 +27,9 @@ def get_best_learning_path():
         selection = Selection(ranked_population, affinity_data, alpha)
         selected_path, selected_index = selection.roulette_wheel_selection()
         filtered_result = selection.get_filtered_best_path_from_result(selected_path, selected_index)
+        # ✅ Filtered version for app/controller
+        print("\n🧪 Filtered Best Path Output (LO Name & ID Only):")
+        print(filtered_result)
 
         return jsonify(filtered_result), 200
 
