@@ -12,7 +12,7 @@ class GetLOService:
             result = session.run(f"""
                 MATCH (c:Concept)-[:HAS_LO]->(lo:LO)
                 WHERE c.name = '{concept_name}'
-                RETURN lo, ID(lo) AS lo_id
+                RETURN lo, elementId(lo) AS lo_id
             """)
 
             # Iterate through the result and extract relevant information from each LO node
@@ -46,7 +46,7 @@ class GetLOService:
                 query = f"""
                     MATCH (c:Concept)-[:WITH_LO]->(lo:LearningObject)
                     WHERE c.name = '{concept_name}'
-                    RETURN c.name AS concept_name, lo
+                    RETURN c.name AS concept_name, lo, elementId(lo) AS lo_id
                 """
 
                 result = session.run(query)
