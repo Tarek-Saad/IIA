@@ -86,12 +86,9 @@ class Selection:
     def get_filtered_best_path_from_result(self, selected_path, path_idx):
         """
         Return only name and lo_id of the selected path's learning objects.
+        The lo_id is simplified to only include the numeric part at the end.
         """
         lo_data = selected_path[2]
-        filtered_los = [
-            {"name": lo.get("name"), "lo_id": lo.get("lo_id")}
-            for lo in lo_data
-        ]
         return {
             "path_index": path_idx + 1,
             "learning_objects": filtered_los
