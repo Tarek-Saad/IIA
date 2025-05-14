@@ -12,9 +12,20 @@ def get_sub_los_by_lo_id():
         if lo_id is None:
             return jsonify({"error": "Missing 'lo_id' in request body"}), 400
 
-        # Convert lo_id to integer if it's a string representation of a number
-        if isinstance(lo_id, str) and lo_id.isdigit():
-            lo_id = int(lo_id)
+        # Process the LO ID - extract numeric part if it's a complex ID
+        try:
+            if isinstance(lo_id, str):
+                if ':' in lo_id:
+                    # Extract the part after the last colon (which is the numeric ID)
+                    numeric_part = lo_id.split(':')[-1]
+                    if numeric_part.isdigit():
+                        lo_id = int(numeric_part)
+                elif lo_id.isdigit():
+                    lo_id = int(lo_id)
+            # If it's already a number, it's fine
+        except Exception as e:
+            print(f"Warning: Could not process complex LO ID: {e}")
+            # Continue with original lo_id if conversion fails
 
         fetcher = LOChildFetcher()
         sub_los = fetcher.get_ordered_sub_los_by_internal_id(lo_id)

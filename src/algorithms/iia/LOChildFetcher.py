@@ -10,12 +10,18 @@ class LOChildFetcher:
         Given a Neo4j internal LO id, fetch ordered subLOs through the THEN chain.
         
         Args:
-            internal_id: Can be either an integer or a string. If it's a string that
-                       represents a number, it will be converted to an integer.
+            internal_id: Can be either an integer or a string. If it's a complex string ID
+                       like "prefix:uuid:number", we'll extract just the number part.
         """
-        # Convert string ID to int if needed
-        if isinstance(internal_id, str) and internal_id.isdigit():
-            internal_id = int(internal_id)
+        # Process complex ID formats
+        if isinstance(internal_id, str):
+            if ':' in internal_id:
+                # Extract the part after the last colon (which should be the numeric ID)
+                numeric_part = internal_id.split(':')[-1]
+                if numeric_part.isdigit():
+                    internal_id = int(numeric_part)
+            elif internal_id.isdigit():
+                internal_id = int(internal_id)
 
         query = """
         MATCH (lo:LO)-[:HAS]->(start:subLO)

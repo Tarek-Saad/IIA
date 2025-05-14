@@ -86,27 +86,42 @@ class Selection:
     def get_filtered_best_path_from_result(self, selected_path, path_idx):
         """
         Return only name and lo_id of the selected path's learning objects.
-        The lo_id should be an integer for compatibility with the mobile app.
+        The lo_id is simplified to only include the numeric part at the end.
         """
         lo_data = selected_path[2]
         filtered_los = []
         
         for lo in lo_data:
             lo_id = lo.get("lo_id")
-            # Try to convert lo_id to an integer for mobile app compatibility
+            # Process LO ID to extract numeric part at the end
             if lo_id is not None:
                 try:
-                    # Convert string to int if possible
-                    if isinstance(lo_id, str):
-                        if lo_id.isdigit():
-                            lo_id = int(lo_id)
+                    # If lo_id is already a number, keep it as is
+                    if isinstance(lo_id, (int, float)):
+                        processed_lo_id = int(lo_id)
+                    # If lo_id is a string like "4:uuid:number", extract the number at the end
+                    elif isinstance(lo_id, str):
+                        if ':' in lo_id:
+                            # Extract the part after the last colon
+                            numeric_part = lo_id.split(':')[-1]
+                            if numeric_part.isdigit():
+                                processed_lo_id = int(numeric_part)
+                            else:
+                                processed_lo_id = lo_id
+                        elif lo_id.isdigit():
+                            processed_lo_id = int(lo_id)
+                        else:
+                            processed_lo_id = lo_id
+                    else:
+                        processed_lo_id = lo_id
                     
                     filtered_los.append({
                         "name": lo.get("name"),
-                        "lo_id": lo_id
+                        "lo_id": processed_lo_id
                     })
-                except Exception:
-                    # If there's any error in processing, still include the LO with original ID
+                except Exception as e:
+                    print(f"Error processing LO ID '{lo_id}': {str(e)}")
+                    # If there's any error in processing, use the original lo_id
                     filtered_los.append({
                         "name": lo.get("name"),
                         "lo_id": lo_id
