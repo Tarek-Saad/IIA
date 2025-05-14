@@ -89,6 +89,31 @@ class Selection:
         The lo_id is simplified to only include the numeric part at the end.
         """
         lo_data = selected_path[2]
+        filtered_los = []
+        
+        for lo in lo_data:
+            lo_id = lo.get("lo_id")
+            # Handle different types of lo_id (string or number)
+            if lo_id is not None:
+                try:
+                    # If lo_id is already a number, keep it as is
+                    if isinstance(lo_id, (int, float)):
+                        processed_lo_id = lo_id
+                    # If lo_id is a string, don't try to convert it
+                    else:
+                        processed_lo_id = lo_id
+                    
+                    filtered_los.append({
+                        "name": lo.get("name"),
+                        "lo_id": processed_lo_id
+                    })
+                except Exception:
+                    # If there's any error in processing, use the original lo_id
+                    filtered_los.append({
+                        "name": lo.get("name"),
+                        "lo_id": lo_id
+                    })
+        
         return {
             "path_index": path_idx + 1,
             "learning_objects": filtered_los

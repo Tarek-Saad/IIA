@@ -12,6 +12,16 @@ def get_sub_los_by_lo_id():
         if lo_id is None:
             return jsonify({"error": "Missing 'lo_id' in request body"}), 400
 
+        # Handle different types of lo_id (string or number)
+        try:
+            # If lo_id is a string that represents a number, convert to int
+            if isinstance(lo_id, str) and lo_id.isdigit():
+                lo_id = int(lo_id)
+            # If lo_id is already an int or float, it's fine as is
+        except Exception as e:
+            print(f"Warning: Could not process lo_id format: {e}")
+            # Continue with original lo_id if conversion fails
+
         fetcher = LOChildFetcher()
         sub_los = fetcher.get_ordered_sub_los_by_internal_id(lo_id)
 
