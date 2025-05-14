@@ -1,4 +1,6 @@
-from flask import Flask
+import os
+import traceback
+from flask import Flask, jsonify
 from flask_cors import CORS
 from src.controllers.http.ConceptOrderController import graph_controller
 from src.controllers.http.GetLOsController import LO_controller
@@ -7,17 +9,14 @@ from src.controllers.http.SelectionController import selection_controller
 from src.controllers.http.LOChildFetcherController import lo_child_controller
 from src.controllers.http.generate_learning_analysisController import learning_analysis_controller
 
-[detached HEAD 20bf0bf] add specific resources to cors orgin
- Author: Tarek <saadfouad1976t@gmail.com>
- 1 file changed, 16 insertions(+), 13 deletions(-)
-Auto-merging app.py
-CONFLICT (content): Merge conflict in app.py
-error: could not apply 77580e2... Enhance CORS config with dynamic origin validation and additional headers
-hint: Resolve all conflicts manually, mark them as resolved with
-hint: "git add/rm <conflicted_files>", then run "git rebase --continue".
-hint: You can instead skip this commit: run "git rebase --skip".
-hint: To abort and get back to the state before "git rebase", run "git rebase --abort".
-Could not apply 77580e2... Enhance CORS config with dynamic origin validation and additional headers
+# Run startup script for Vercel
+if os.environ.get("VERCEL") == "1":
+    try:
+        import vercel_startup
+        vercel_startup.check_environment()
+    except Exception as e:
+        print(f"Error running startup script: {str(e)}")
+
 app = Flask(__name__)
 
 
@@ -44,10 +43,41 @@ app.register_blueprint(selection_controller, url_prefix="/api")  # For selection
 app.register_blueprint(lo_child_controller, url_prefix="/fetch")  # For getting sub LOs children
 app.register_blueprint(learning_analysis_controller, url_prefix='/learning-analysis')  # To get the inputs of the algorithms (knowledgebase & goal)
 
+# Global error handler
+@app.errorhandler(Exception)
+def handle_error(e):
+    print(f"Error: {str(e)}")
+    print(traceback.format_exc())
+    return jsonify({
+        "error": str(e),
+        "type": type(e).__name__,
+        "traceback": traceback.format_exc()
+    }), 500
+
 # Default GET route for the root URL
 @app.route('/')
 def home():
-    return "Welcome to the Learning Object API! Navigate to specific endpoints for further actionss ."
+    # Test database connections
+    try:
+        from src.core.repositories.GraphDB import GraphDB
+        db = GraphDB()
+        db_status = "Connected" if db.test_connection() else "Failed"
+    except Exception as e:
+        db_status = f"Error: {str(e)}"
+    
+    # Get environment info
+    env_info = {
+        "FLASK_ENV": os.environ.get("FLASK_ENV", "development"),
+        "DATABASE": db_status,
+        "PYTHON_VERSION": os.environ.get("PYTHONVERSION", "unknown"),
+        "VERCEL": os.environ.get("VERCEL", "0")
+    }
+    
+    return jsonify({
+        "message": "Welcome to the Learning Object API! Navigate to specific endpoints for further actions.",
+        "status": "online",
+        "environment": env_info
+    })
 
 
 if __name__ == "__main__":
