@@ -1,5 +1,5 @@
 from src.core.repositories.GraphDB import GraphDB
-from typing import Union, List, Dict, Any
+from typing import Union
 
 class LOChildFetcher:
     def __init__(self):
@@ -8,19 +8,14 @@ class LOChildFetcher:
     def get_ordered_sub_los_by_internal_id(self, internal_id: Union[int, str]):
         """
         Given a Neo4j internal LO id, fetch ordered subLOs through the THEN chain.
-        Includes full debug logging.
         
         Args:
             internal_id: Can be either an integer or a string. If it's a string that
                        represents a number, it will be converted to an integer.
         """
-        # Try to convert string ID to int if needed
-        try:
-            if isinstance(internal_id, str) and internal_id.isdigit():
-                internal_id = int(internal_id)
-        except Exception as e:
-            print(f"Warning: Could not convert ID '{internal_id}' to integer: {e}")
-            # Continue with original ID format
+        # Convert string ID to int if needed
+        if isinstance(internal_id, str) and internal_id.isdigit():
+            internal_id = int(internal_id)
 
         query = """
         MATCH (lo:LO)-[:HAS]->(start:subLO)

@@ -86,29 +86,27 @@ class Selection:
     def get_filtered_best_path_from_result(self, selected_path, path_idx):
         """
         Return only name and lo_id of the selected path's learning objects.
-        The lo_id is simplified to only include the numeric part at the end.
+        The lo_id should be an integer for compatibility with the mobile app.
         """
         lo_data = selected_path[2]
         filtered_los = []
         
         for lo in lo_data:
             lo_id = lo.get("lo_id")
-            # Handle different types of lo_id (string or number)
+            # Try to convert lo_id to an integer for mobile app compatibility
             if lo_id is not None:
                 try:
-                    # If lo_id is already a number, keep it as is
-                    if isinstance(lo_id, (int, float)):
-                        processed_lo_id = lo_id
-                    # If lo_id is a string, don't try to convert it
-                    else:
-                        processed_lo_id = lo_id
+                    # Convert string to int if possible
+                    if isinstance(lo_id, str):
+                        if lo_id.isdigit():
+                            lo_id = int(lo_id)
                     
                     filtered_los.append({
                         "name": lo.get("name"),
-                        "lo_id": processed_lo_id
+                        "lo_id": lo_id
                     })
                 except Exception:
-                    # If there's any error in processing, use the original lo_id
+                    # If there's any error in processing, still include the LO with original ID
                     filtered_los.append({
                         "name": lo.get("name"),
                         "lo_id": lo_id
