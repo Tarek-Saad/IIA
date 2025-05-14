@@ -129,6 +129,19 @@ def get_best_learning_path():
 
         # Return filtered result in the same format expected by the mobile app
         filtered_result = selection.get_filtered_best_path_from_result(final_path, final_index)
+
+        # Process the LO IDs to extract numeric parts for mobile app compatibility
+        for lo in filtered_result["learning_objects"]:
+            lo_id = lo.get("lo_id")
+            if isinstance(lo_id, str):
+                if ':' in lo_id:
+                    # Extract the numeric part after the last colon
+                    numeric_part = lo_id.split(":")[-1]
+                    if numeric_part.isdigit():
+                        lo["lo_id"] = int(numeric_part)
+                elif lo_id.isdigit():
+                    lo["lo_id"] = int(lo_id)
+
         return jsonify(filtered_result), 200
 
     except Exception as e:

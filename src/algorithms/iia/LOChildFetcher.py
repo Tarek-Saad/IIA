@@ -1,28 +1,14 @@
 from src.core.repositories.GraphDB import GraphDB
-from typing import Union
 
 class LOChildFetcher:
     def __init__(self):
         self.driver = GraphDB().get_driver()
 
-    def get_ordered_sub_los_by_internal_id(self, internal_id: Union[int, str]):
+    def get_ordered_sub_los_by_internal_id(self, internal_id: int):
         """
         Given a Neo4j internal LO id, fetch ordered subLOs through the THEN chain.
-        
-        Args:
-            internal_id: Can be either an integer or a string. If it's a complex string ID
-                       like "prefix:uuid:number", we'll extract just the number part.
+        Includes full debug logging.
         """
-        # Process complex ID formats
-        if isinstance(internal_id, str):
-            if ':' in internal_id:
-                # Extract the part after the last colon (which should be the numeric ID)
-                numeric_part = internal_id.split(':')[-1]
-                if numeric_part.isdigit():
-                    internal_id = int(numeric_part)
-            elif internal_id.isdigit():
-                internal_id = int(internal_id)
-
         query = """
         MATCH (lo:LO)-[:HAS]->(start:subLO)
         WHERE id(lo) = $id
