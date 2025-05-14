@@ -86,12 +86,33 @@ class Selection:
     def get_filtered_best_path_from_result(self, selected_path, path_idx):
         """
         Return only name and lo_id of the selected path's learning objects.
+        Convert lo_id to integer if it's a string.
         """
         lo_data = selected_path[2]
-        filtered_los = [
-            {"name": lo.get("name"), "lo_id": lo.get("lo_id")}
-            for lo in lo_data
-        ]
+        filtered_los = []
+        
+        print("[DEBUG] Processing learning objects in SelectionV2.py:")
+        for lo in lo_data:
+            lo_id = lo.get("lo_id")
+            name = lo.get("name")
+            
+            print(f"[DEBUG] Original LO ID for {name}: {lo_id} ({type(lo_id)})")
+            
+            # Convert lo_id to integer if it's a string
+            if isinstance(lo_id, str):
+                if ':' in lo_id:
+                    # Extract numeric part after the last colon
+                    lo_id = int(lo_id.split(':')[-1])
+                elif lo_id.isdigit():
+                    lo_id = int(lo_id)
+            
+            print(f"[DEBUG] Processed LO ID for {name}: {lo_id} ({type(lo_id)})")
+            
+            filtered_los.append({
+                "name": name,
+                "lo_id": lo_id
+            })
+        
         return {
             "path_index": path_idx + 1,
             "learning_objects": filtered_los

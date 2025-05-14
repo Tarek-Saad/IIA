@@ -12,6 +12,14 @@ def get_sub_los_by_lo_id():
         if lo_id is None:
             return jsonify({"error": "Missing 'lo_id' in request body"}), 400
 
+        # Convert lo_id to integer if it's a string
+        if isinstance(lo_id, str):
+            if ':' in lo_id:
+                # Extract numeric part after the last colon
+                lo_id = int(lo_id.split(':')[-1])
+            elif lo_id.isdigit():
+                lo_id = int(lo_id)
+
         fetcher = LOChildFetcher()
         sub_los = fetcher.get_ordered_sub_los_by_internal_id(lo_id)
 

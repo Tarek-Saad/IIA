@@ -10,7 +10,7 @@ from src.controllers.http.generate_learning_analysisController import learning_a
 app = Flask(__name__)
 
 # Enable CORS for all routes
-CORS(app, 
+CORS(app,
     origins=["http://localhost:3000", "http://192.168.1.195:3000", "https://codengo-4hyo2vs7x-tarek-saads-projects.vercel.app", "*"],
     allow_credentials=True,
     supports_credentials=True,
