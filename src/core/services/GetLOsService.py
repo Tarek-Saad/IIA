@@ -18,6 +18,15 @@ class GetLOService:
             # Iterate through the result and extract relevant information from each LO node
             for record in result:
                 lo_node = record["lo"]  # The node representing the Learning Object
+                
+                # Hotfix: Force lo_id to be an integer by extracting the numeric part if it's a string
+                lo_id = record["lo_id"]
+                if isinstance(lo_id, str) and ":" in lo_id:
+                    lo_id = int(lo_id.split(":")[-1])  # extract and cast last part to int
+                elif isinstance(lo_id, str) and lo_id.isdigit():
+                    lo_id = int(lo_id)
+                
+                print(f"[DEBUG] LO ID: {lo_id} ({type(lo_id)})")
 
                 # Extracting properties from the LO node to return them as an array
                 lo_data = {
@@ -29,7 +38,7 @@ class GetLOService:
                     "learning_style_sensitive_intuitive": lo_node["learning_style_sensitive_intuitive"],
                     "sourcee": lo_node["sourcee"],
                     "learning_style_active_reflective": lo_node["learning_style_active_reflective"],
-                    "lo_id": record["lo_id"]  # Adding the lo_id from the query result
+                    "lo_id": lo_id  # Using the processed lo_id
                 }
 
                 los.append(lo_data)  # Add the learning object data to the list
@@ -54,6 +63,14 @@ class GetLOService:
                 lo_list = []
                 for record in result:
                     lo = record["lo"]
+                    
+                    # Hotfix: Force lo_id to be an integer for this query too
+                    lo_id = record["lo_id"]
+                    if isinstance(lo_id, str) and ":" in lo_id:
+                        lo_id = int(lo_id.split(":")[-1])
+                        # Attach the processed lo_id to the lo object if needed
+                        lo["lo_id"] = lo_id
+                    
                     lo_list.append(lo)
 
                 concept_lo_mapping[concept_name] = lo_list

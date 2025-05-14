@@ -130,6 +130,10 @@ def get_best_learning_path():
         # Return filtered result in the same format expected by the mobile app
         filtered_result = selection.get_filtered_best_path_from_result(final_path, final_index)
 
+        print("[DEBUG] Learning objects before ID processing:")
+        for lo in filtered_result["learning_objects"]:
+            print(f"[DEBUG] LO: {lo['name']}, ID: {lo['lo_id']} ({type(lo['lo_id'])})")
+
         # Process the LO IDs to extract numeric parts for mobile app compatibility
         for lo in filtered_result["learning_objects"]:
             lo_id = lo.get("lo_id")
@@ -141,6 +145,10 @@ def get_best_learning_path():
                         lo["lo_id"] = int(numeric_part)
                 elif lo_id.isdigit():
                     lo["lo_id"] = int(lo_id)
+
+        print("[DEBUG] Learning objects after ID processing:")
+        for lo in filtered_result["learning_objects"]:
+            print(f"[DEBUG] LO: {lo['name']}, ID: {lo['lo_id']} ({type(lo['lo_id'])})")
 
         return jsonify(filtered_result), 200
 

@@ -91,9 +91,12 @@ class Selection:
         lo_data = selected_path[2]
         filtered_los = []
         
+        print("[DEBUG] Processing learning objects in SelectionV2.py:")
         for lo in lo_data:
             lo_id = lo.get("lo_id")
             name = lo.get("name")
+            
+            print(f"[DEBUG] Original LO ID for {name}: {lo_id} ({type(lo_id)})")
             
             # Convert lo_id to integer if it's a string
             if isinstance(lo_id, str):
@@ -102,7 +105,9 @@ class Selection:
                     lo_id = int(lo_id.split(':')[-1])
                 elif lo_id.isdigit():
                     lo_id = int(lo_id)
-                
+            
+            print(f"[DEBUG] Processed LO ID for {name}: {lo_id} ({type(lo_id)})")
+            
             filtered_los.append({
                 "name": name,
                 "lo_id": lo_id
