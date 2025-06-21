@@ -77,3 +77,90 @@ Through testing and analysis, we found that crossover and mutation did **not ali
 
 * 💡 [Frontend App (Flutter)](https://github.com/HassanYasser07/intelligent_tutoring_system)
   Cross-platform mobile app that presents onboarding, learning paths, LOs, and progress tracking.
+
+---
+
+## 🧩 System Architecture
+
+```text
+[ Flutter App ]
+ 	↓
+[ Flask Backend ]
+ 	├─ Learner Module (FSLSM, Auth)
+ 	├─ IIA Engine (This Repo)
+ 	↓
+[ Databases ]
+ 	├─ Neo4j: Concept Graph (DAG)
+ 	├─ MongoDB: FSLSM Questionnaire
+ 	└─ PostgreSQL: User Data, Results, Feedback
+```
+
+---
+
+## 🧪 Demo and Presentation
+
+* 🎥 **Demo Video:** [Link](https://drive.google.com/file/d/1PU-XnxljKAfzq-ISgxyakUZ2cDXJJDqv/view?usp=drivesdk)
+
+
+* 📊 **Final Project Presentation:**
+  [📎 Canva Link](https://www.canva.com/design/DAGqAd_vihQ/cF8acxNWvwT_8B4sjQzE1Q/edit?utm_content=DAGqAd_vihQ&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
+
+* 📚 **Full Documentation:**
+  [📄 Codingo Final Book (PDF)](https://drive.google.com/file/d/1IFTYK0Q1CGIythuggzzv1zxq13GOVo0J/view?usp=sharing)
+
+---
+
+## 🗃️ Database Schema (Summary)
+
+### 1. **Neo4j**
+
+Graph schema to model concepts and prerequisites (Directed Acyclic Graph):
+
+```
+(:Concept)-[:PREREQUISITE_FOR]->(:Concept)
+(:Concept)-[:HAS_LO]->(:LO)
+(:LO)-[:HAS]->(:SubLO)
+```
+
+### 2. **PostgreSQL**
+
+Stores user data, quiz results, and feedback:
+
+```sql
+Users(email, password_hash, name)
+LearningProfiles(user_id, ls1, ls2, ls3, ls4)
+KnowledgeBase(user_id, concept_name)
+LearningGoals(user_id, concept_name)
+```
+
+### 3. **MongoDB**
+
+Holds FSLSM quiz questions for dynamic rendering during onboarding.
+
+---
+
+## 💡 Want to Contribute?
+
+We’re proud to share this work as part of our graduation project. Future enhancements may include:
+
+* Real-time path updates using learning analytics
+* Integration with external platforms (Khan Academy, Coursera)
+* Gamified elements and collaborative learning features
+
+Feel free to fork or suggest improvements!
+
+---
+
+## 📄 License
+
+This project is for academic and research use. All code in this repository is provided under the [MIT License](LICENSE).
+
+---
+
+## 🙌 Acknowledgments
+
+Thanks to our supervisor **Dr. Fatma Sayed Gadelrab** for continuous support, and to the Faculty of Computers and AI at Matrouh University for guidance throughout this journey.
+
+---
+
+> Made with 💻, 💡, and ☕ by the Codingo team.
