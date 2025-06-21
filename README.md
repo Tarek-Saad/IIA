@@ -68,8 +68,6 @@ Through testing and analysis, we found that crossover and mutation did **not ali
 
 > 💡 As a result, we focused on **affinity-based selection** (Pv, SPv, and Roulette) to maintain quality and coherence of the paths.
 
-For full details, see Chapter 4.2 of the [Documentation](https://drive.google.com/file/d/1IFTYK0Q1CGIythuggzzv1zxq13GOVo0J/view?usp=sharing).
-
 ---
 
 ## 📱 Related Repositories
