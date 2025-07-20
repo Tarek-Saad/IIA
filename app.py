@@ -7,17 +7,7 @@ from src.controllers.http.SelectionController import selection_controller
 from src.controllers.http.LOChildFetcherController import lo_child_controller
 from src.controllers.http.generate_learning_analysisController import learning_analysis_controller
 
-[detached HEAD 20bf0bf] add specific resources to cors orgin
- Author: Tarek <saadfouad1976t@gmail.com>
- 1 file changed, 16 insertions(+), 13 deletions(-)
-Auto-merging app.py
-CONFLICT (content): Merge conflict in app.py
-error: could not apply 77580e2... Enhance CORS config with dynamic origin validation and additional headers
-hint: Resolve all conflicts manually, mark them as resolved with
-hint: "git add/rm <conflicted_files>", then run "git rebase --continue".
-hint: You can instead skip this commit: run "git rebase --skip".
-hint: To abort and get back to the state before "git rebase", run "git rebase --abort".
-Could not apply 77580e2... Enhance CORS config with dynamic origin validation and additional headers
+
 app = Flask(__name__)
 
 
