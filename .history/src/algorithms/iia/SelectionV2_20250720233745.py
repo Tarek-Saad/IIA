@@ -89,17 +89,10 @@ class Selection:
         The lo_id is simplified to only include the numeric part at the end.
         """
         lo_data = selected_path[2]
-        filtered_los = []
-        for lo in lo_data:
-            lo_id = lo.get("lo_id")
-            # Extract only the numeric part at the end if it contains colons
-            if lo_id and ":" in str(lo_id):
-                lo_id = str(lo_id).split(":")[-1]
-            
-            filtered_los.append({
-                "name": lo.get("name"),
-                "lo_id": lo_id
-            })
+        filtered_los = [
+            {"name": lo.get("name"), "lo_id": lo.get("lo_id")}
+            for lo in lo_data
+        ]
         return {
             "path_index": path_idx + 1,
             "learning_objects": filtered_los
